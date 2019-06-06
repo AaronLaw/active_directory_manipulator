@@ -46,12 +46,14 @@ def create_user_info(column_list, num_user):
 
     # Column-data: generate user data => a 2-dimension list
     for i in range(num_user):
+        series_number = generate_series_number(num_user)
         # Generate user data according to columns, and append it to a big list
-        firstname = _get_firstname(firstname_list) 
+        firstname = _get_firstname(firstname_list)
+        firstname = f"{firstname}{series_number}"
         lastname = _get_lastname(lastname_list) 
         password = _get_password(pwd_len)
-        email = _get_email(firstname, lastname, email_endin, num_user)
-        displayname = _get_displayname(firstname, lastname, num_user)
+        email = _get_email(firstname, lastname, email_endin, series_number)
+        displayname = _get_displayname(firstname, lastname, series_number)
         
         whole_list.append([firstname,
                     lastname,
@@ -82,18 +84,15 @@ def _get_firstname(firstname_list) -> str:
     return _get_random_item(firstname_list)
 
 def _get_lastname(lastname_list) -> str:
-####    if RANDOM_MODE:
     return _get_random_item(lastname_list)
 
 def _get_password(pwd_len):
     return generate_password(pwd_len)
 
-def _get_email(firstname, lastname, email_endin, last_digit):
-    series = random.randint(0, last_digit)
+def _get_email(firstname, lastname, email_endin, series):
     return f"{firstname}.{lastname}-{series}{email_endin}"
 
-def _get_displayname(firstname, lastname, last_digit):
-    series = random.randint(0, last_digit)
+def _get_displayname(firstname, lastname, series):
     return f"{firstname}.{lastname}-{series}"
     
 
@@ -104,6 +103,12 @@ def generate_password(len):
     passlen = len
     p =  "".join(random.sample(s,passlen ))
     return p
+def generate_series_number(last_digit):
+    # if random_mode:
+    return random.randint(0, last_digit)
+    # else:
+        # series_number += 1
+        # return series_number
 
 def _get_columns(column_list):
     columns =  column_list.values()
