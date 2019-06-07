@@ -2,32 +2,34 @@
 
 # Column name, number of user accounts, are user-defined.
 # We are going to have some randomness in the generated user information.
-# Google: python write cvs file -> https://docs.python.org/zh-cn/3/library/csv.html
-#-> https://realpython.com/python-csv/
-#-> https://blog.gtwang.org/programming/python-csv-file-reading-and-writing-tutorial/
+# Google: python write cvs file
+#   -> https://docs.python.org/zh-cn/3/library/csv.html
+#   -> https://realpython.com/python-csv/
+#   -> https://blog.gtwang.org/programming/python-csv-file-reading-and-writing-tutorial/
 
 # @Author: Aaron Law
-# @Last Update: 2019-06-06
-
+# @Last Update: 2019-06-07
+# -----------------------------------------------------------------------------
 ### Variables that can be changed on demand
 filename = 'useraccount.csv'
 num_user = 1000
-column_list = { # A dict representing AD field and column head pairs. 
-                # Format: AD-field : Column-name (where Column-name exact match to powershell's variables)
-    'First name' : 'FirstName',  
-    'Last name' : 'LastName', 
-    'E-mail' : 'EmailAddress', 
-    'Display name' : 'DisplayName', 
-    'Password' : 'Password',
-    }
+column_list = {
+	# A dict representing AD field and column head pairs. 
+	# Format: AD-field : Column-name (where Column-name exact match to variables in powershell)
+		'First name' : 'FirstName',  
+		'Last name' : 'LastName', 
+		'E-mail' : 'EmailAddress', 
+		'Display name' : 'DisplayName', 
+		'Password' : 'Password',
+		}
+email_endin = '@corpdev.hkjc.com'
+pwd_len = 8
 
 # For generated randomness
 name_prefix = 'AaUser'
 firstname_list = ['John', 'Peter', 'Hello', 'Net', 'Aaron', 'David', 'Jade', 'Susan', 'Doom']
 lastname_list = ['Wick', 'Law', 'World', 'Lam', 'Law', 'Chan']
-pwd_len = 8
-email_endin = '@corpdev.hkjc.com'
-
+# -----------------------------------------------------------------------------
 import csv, random
 
 ### In memory
@@ -96,15 +98,16 @@ def _get_email(firstname, lastname, email_endin, series):
 
 def _get_displayname(firstname, lastname, series):
     return f"{firstname}.{lastname}-{series}"
-    
 
 def generate_password(len):
-# Reference:
-# Google: python generate random password -> https://www.practicepython.org/solution/2014/06/06/16-password-generator-solutions.html
+    '''Generate a password in random in len.'''
+    # Reference:
+    # Google: python generate random password -> https://www.practicepython.org/solution/2014/06/06/16-password-generator-solutions.html
     s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
     passlen = len
     p =  "".join(random.sample(s,passlen ))
     return p
+
 def generate_series_number(last_digit):
     # if random_mode:
     return random.randint(0, last_digit)
@@ -123,3 +126,6 @@ if __name__ == "__main__":
     # print(_get_random_item(firstname_list))
     # print(_get_firstname(firstname_list))
     # print(_get_password(18))
+# TODO:
+# RANDOM_MODE
+# exception on file write
