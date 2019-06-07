@@ -14,14 +14,14 @@
 filename = 'useraccount.csv'
 num_user = 1000
 column_list = {
-	# A dict representing AD field and column head pairs. 
-	# Format: AD-field : Column-name (where Column-name exact match to variables in powershell)
-		'First name' : 'FirstName',  
-		'Last name' : 'LastName', 
-		'E-mail' : 'EmailAddress', 
-		'Display name' : 'DisplayName', 
-		'Password' : 'Password',
-		}
+    # A dict representing AD field and column head pairs. 
+    # Format: AD-field : Column-name (where Column-name exact match to variables in powershell)
+        'First name' : 'FirstName',  
+        'Last name' : 'LastName', 
+        'E-mail' : 'EmailAddress', 
+        'Display name' : 'DisplayName', 
+        'Password' : 'Password',
+        }
 email_endin = '@corpdev.hkjc.com'
 pwd_len = 8
 
@@ -33,37 +33,37 @@ lastname_list = ['Wick', 'Law', 'World', 'Lam', 'Law', 'Chan']
 import csv, random
 
 ### In memory
-def create_user_info(column_list, num_user):
-    '''A sample format of user information is:
-    First-name,Last-name, Displayname, EmailAddress
+def create_column_head(column_list):
+    '''Generate column head from a dict.
+    A sample format of user information is:
+    FirstName, LastName, DisplayName, EmailAddress, Password.
     '''
-    # Combian column-head + column-data => a big list
-    whole_list = [] # 2-dimension
-
     # Column-head: get a list of columns from a dict => column heads
-    columns = _get_columns(column_list)
-    
-    # Combian column-head + column-data => a big list
-    whole_list.append(columns)
+    columns =  column_list.values()
+    return (list(columns)) #convert dict to list
 
-    # Column-data: generate user data => a 2-dimension list
+def create_user_info(column_list, num_user):
+    '''Column-data: generate user data => a 2-dimension list'''
+    whole_list = [] # 2-dimension
     for i in range(num_user):
         series_number = generate_series_number(num_user)
+
         # Generate user data according to columns, and append it to a big list
-        firstname = _get_firstname(firstname_list)
-        lastname = _get_lastname(lastname_list) 
+        firstname = _get_random_item(firstname_list)
+        lastname = _get_random_item(lastname_list) 
         password = _get_password(pwd_len)
-        email = _get_email(firstname, lastname, email_endin, series_number)
-        displayname = _get_displayname(firstname, lastname, series_number)
+        # email = _get_email(firstname, lastname, email_endin, series_number)
+        # displayname = _get_displayname(firstname, lastname, series_number)
         
         firstname = f"{firstname}{series_number}"
-        displayname = f"{name_prefix}{displayname}"
+        email = f"{firstname}.{lastname}-{series_number}{email_endin}"
+        displayname = f"{firstname} {lastname} {series_number}"
         
         whole_list.append([firstname,
-                    lastname,
-                    email,
-                    displayname,
-                    password,
+                        lastname,
+                        email,
+                        displayname,
+                        password,
         ])
     return whole_list
 
@@ -81,23 +81,17 @@ def write_csv(list, filename):
 
 ### Private functions
 def _get_random_item(list) -> str:
-    '''Get an item of a list from a random position.'''
+    '''Get an item from a list in a random position.'''
     return list[random.randint(0, len(list)-1)]
 
-def _get_firstname(firstname_list) -> str:
-    return _get_random_item(firstname_list)
+# def _get_firstname(firstname_list) -> str:
+#     return _get_random_item(firstname_list)
 
-def _get_lastname(lastname_list) -> str:
-    return _get_random_item(lastname_list)
+# def _get_lastname(lastname_list) -> str:
+#     return _get_random_item(lastname_list)
 
 def _get_password(pwd_len):
     return generate_password(pwd_len)
-
-def _get_email(firstname, lastname, email_endin, series):
-    return f"{firstname}.{lastname}-{series}{email_endin}"
-
-def _get_displayname(firstname, lastname, series):
-    return f"{firstname}.{lastname}-{series}"
 
 def generate_password(len):
     '''Generate a password in random in len.'''
@@ -108,24 +102,31 @@ def generate_password(len):
     p =  "".join(random.sample(s,passlen ))
     return p
 
-def generate_series_number(last_digit):
+def generate_series_number(last_num):
     # if random_mode:
-    return random.randint(0, last_digit)
+    return random.randint(0, last_num)
     # else:
         # series_number += 1
         # return series_number
 
-def _get_columns(column_list):
-    columns =  column_list.values()
-    return (list(columns)) #convert dict to list
+def make_table(column_head, user_info):
+    whole_list = [] # 2-dimension
+    whole_list.append(column_head)
+    for row in user_info:
+        whole_list.append(row)
+    return whole_list
 
 if __name__ == "__main__":
-    list = create_user_info(column_list, num_user)
-    write_csv(list, filename)
+    column_head = create_column_head(column_list)
+    user_info = create_user_info(column_list, num_user)
+    # Combian column-head + column-data => a big list
+    whole_list = make_table(column_head, user_info)
+    write_csv(whole_list, filename)
     # print(list)
     # print(_get_random_item(firstname_list))
     # print(_get_firstname(firstname_list))
     # print(_get_password(18))
+    print(f"{len(whole_list)} row has been written into {filename}.")
 # TODO:
 # RANDOM_MODE
 # exception on file write
