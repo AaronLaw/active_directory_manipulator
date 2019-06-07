@@ -84,12 +84,6 @@ def _get_random_item(list) -> str:
     '''Get an item from a list in a random position.'''
     return list[random.randint(0, len(list)-1)]
 
-# def _get_firstname(firstname_list) -> str:
-#     return _get_random_item(firstname_list)
-
-# def _get_lastname(lastname_list) -> str:
-#     return _get_random_item(lastname_list)
-
 def _get_password(pwd_len):
     return generate_password(pwd_len)
 
