@@ -14,19 +14,19 @@ filename = 'useraccount.csv'
 num_user = 1000
 column_list = { # A dict representing AD field and column head pairs. 
                 # Format: AD-field : Column-name (where Column-name exact match to powershell's variables)
-    'First-name' : 'fn',  
-    'Last-name' : 'ln', 
-    'email' : 'email', 
-    'displayname' : 'Displayname', 
-    'password' : 'pwd',
+    'First name' : 'FirstName',  
+    'Last name' : 'LastName', 
+    'E-mail' : 'EmailAddress', 
+    'Display name' : 'DisplayName', 
+    'Password' : 'Password',
     }
 
 # For generated randomness
-name_prefix = 'Aauser'
+name_prefix = 'AaUser'
 firstname_list = ['John', 'Peter', 'Hello', 'Net', 'Aaron', 'David', 'Jade', 'Susan', 'Doom']
 lastname_list = ['Wick', 'Law', 'World', 'Lam', 'Law', 'Chan']
-pwd_len = 18
-email_endin = '@devcorp.hkjc.com'
+pwd_len = 8
+email_endin = '@corpdev.hkjc.com'
 
 import csv, random
 
@@ -49,11 +49,13 @@ def create_user_info(column_list, num_user):
         series_number = generate_series_number(num_user)
         # Generate user data according to columns, and append it to a big list
         firstname = _get_firstname(firstname_list)
-        firstname = f"{firstname}{series_number}"
         lastname = _get_lastname(lastname_list) 
         password = _get_password(pwd_len)
         email = _get_email(firstname, lastname, email_endin, series_number)
         displayname = _get_displayname(firstname, lastname, series_number)
+        
+        firstname = f"{firstname}{series_number}"
+        displayname = f"{name_prefix}{displayname}"
         
         whole_list.append([firstname,
                     lastname,
