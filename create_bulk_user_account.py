@@ -55,9 +55,9 @@ def create_user_info(column_list, num_user):
         # email = _get_email(firstname, lastname, email_endin, series_number)
         # displayname = _get_displayname(firstname, lastname, series_number)
         
-        firstname = f"{firstname}{series_number}"
         email = f"{firstname}.{lastname}-{series_number}{email_endin}"
         displayname = f"{firstname} {lastname} {series_number}"
+        firstname = f"{firstname}{series_number}"
         
         whole_list.append([firstname,
                         lastname,
@@ -69,15 +69,21 @@ def create_user_info(column_list, num_user):
 
 ### On disk
 def write_csv(list, filename):
-    # Open an output csv file
-    with open(filename, 'w', newline='') as csvfile:
-        # Create a csv writer object for writting in
-        writer = csv.writer(csvfile)
-        # Write in the first row as column header
-        #     (writer.writerow(['Name', 'height', 'Weight'])
-        #     writer.writerow(['AB', 165, 57]))
-        # Write to csv file row by row
-        writer.writerows(list)
+    try:
+        # Open an output csv file
+        with open(filename, 'w', newline='') as csvfile:
+            # Create a csv writer object for writting in
+            writer = csv.writer(csvfile)
+            # Write in the first row as column header
+            #     (writer.writerow(['Name', 'height', 'Weight'])
+            #     writer.writerow(['AB', 165, 57]))
+            # Write to csv file row by row
+            writer.writerows(list)
+    except IOError as e:
+        print(f"A problem occurs: {e}")
+    else:
+        print(f"{len(list)} row has been written into {filename}.")
+
 
 ### Private functions
 def _get_random_item(list) -> str:
@@ -103,7 +109,7 @@ def generate_series_number(last_num):
         # series_number += 1
         # return series_number
 
-def make_table(column_head, user_info):
+def make_table(column_head, user_info) -> '2-dimensions list':
     whole_list = [] # 2-dimension
     whole_list.append(column_head)
     for row in user_info:
@@ -120,7 +126,6 @@ if __name__ == "__main__":
     # print(_get_random_item(firstname_list))
     # print(_get_firstname(firstname_list))
     # print(_get_password(18))
-    print(f"{len(whole_list)} row has been written into {filename}.")
 # TODO:
 # RANDOM_MODE
 # exception on file write
