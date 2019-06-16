@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Mass generate user information, and write into a csv file for later use.
 
 # Column name, number of user accounts, are user-defined.
@@ -16,7 +18,7 @@ num_user = 1000
 column_list = {
     # A dict representing AD field and column head pairs. 
     # Format: AD-field : Column-name (where Column-name exact match to variables in powershell)
-        'First name' : 'FirstName',  
+        'First name' : 'FirstName', 
         'Last name' : 'LastName', 
         'E-mail' : 'EmailAddress', 
         'Display name' : 'DisplayName', 
@@ -31,6 +33,7 @@ firstname_list = ['John', 'Peter', 'Hello', 'Net', 'Aaron', 'David', 'Jade', 'Su
 lastname_list = ['Wick', 'Law', 'World', 'Lam', 'Law', 'Chan']
 # -----------------------------------------------------------------------------
 import csv, random
+import password as pwd
 
 ### In memory
 def create_column_head(column_list):
@@ -58,7 +61,7 @@ def create_user_info(column_list, num_user):
         email = f"{firstname}.{lastname}-{series_number}{email_endin}"
         displayname = f"{firstname} {lastname} {series_number}"
         firstname = f"{firstname}{series_number}"
-        
+
         whole_list.append([firstname,
                         lastname,
                         email,
@@ -91,23 +94,11 @@ def _get_random_item(list) -> str:
     return list[random.randint(0, len(list)-1)]
 
 def _get_password(pwd_len):
-    return generate_password(pwd_len)
-
-def generate_password(len):
-    '''Generate a password in random in len.'''
-    # Reference:
-    # Google: python generate random password -> https://www.practicepython.org/solution/2014/06/06/16-password-generator-solutions.html
-    s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
-    passlen = len
-    p =  "".join(random.sample(s,passlen ))
-    return p
+    my_pwd = pwd.Password(pwd_len) # create a Password object.
+    return my_pwd.generate_password()
 
 def generate_series_number(last_num):
-    # if random_mode:
     return random.randint(0, last_num)
-    # else:
-        # series_number += 1
-        # return series_number
 
 def make_table(column_head, user_info) -> '2-dimensions list':
     whole_list = [] # 2-dimension
@@ -128,4 +119,3 @@ if __name__ == "__main__":
     # print(_get_password(18))
 # TODO:
 # RANDOM_MODE
-# exception on file write
