@@ -4,6 +4,7 @@
 
 # Column name, number of user accounts, are user-defined.
 # We are going to have some randomness in the generated user information.
+# 2 modes are supported: mode random, and mode series.
 # Google: python write cvs file
 #   -> https://docs.python.org/zh-cn/3/library/csv.html
 #   -> https://realpython.com/python-csv/
@@ -28,6 +29,8 @@ email_endin = '@corpdev.hkjc.com'
 pwd_len = 8
 
 # For generated randomness
+MODE_CHOOSE = ('random', 'series') # Generate user name randomly, or generate in series
+mode = MODE_CHOOSE[1]
 name_prefix = 'AaUser'
 firstname_list = ['John', 'Peter', 'Hello', 'Net', 'Aaron', 'David', 'Jade', 'Susan', 'Doom']
 lastname_list = ['Wick', 'Law', 'World', 'Lam', 'Law', 'Chan']
@@ -45,22 +48,42 @@ def create_column_head(column_list):
     columns =  column_list.values()
     return (list(columns)) #convert dict to list
 
-def create_user_info(column_list, num_user):
+def create_user_info(column_list, num_user, mode):
     '''Column-data: generate user data => a 2-dimension list'''
     whole_list = [] # 2-dimension
-    for i in range(num_user):
-        series_number = generate_series_number(num_user)
+    series_number = 1
 
-        # Generate user data according to columns, and append it to a big list
-        firstname = _get_random_item(firstname_list)
-        lastname = _get_random_item(lastname_list) 
-        password = _get_password(pwd_len)
-        # email = _get_email(firstname, lastname, email_endin, series_number)
-        # displayname = _get_displayname(firstname, lastname, series_number)
-        
-        email = f"{firstname}.{lastname}-{series_number}{email_endin}"
-        displayname = f"{firstname} {lastname} {series_number}"
-        firstname = f"{firstname}{series_number}"
+    for i in range(num_user):
+        if mode == 'random': # FIXME: random mode not work. Random mode
+            # print("random mode")
+            # create user name in random
+            number = generate_random_series_number(num_user)
+
+            # Generate user data according to columns, and append it to a big list
+            firstname = _get_random_item(firstname_list)
+            lastname = _get_random_item(lastname_list) 
+            password = _get_password(pwd_len)
+            # email = _get_email(firstname, lastname, email_endin, series_number)
+            # displayname = _get_displayname(firstname, lastname, series_number)
+            
+            email = f"{firstname}.{lastname}-{number}{email_endin}"
+            displayname = f"{firstname} {lastname} {number}"
+            firstname = f"{firstname}{number}"
+        elif mode == 'series': # Series mode
+            # print("series mode")
+            # create user name in series
+            series_number = generate_next_series_number(series_number)
+
+            # Generate user data according to columns, and append it to a big list
+            firstname = name_prefix
+            lastname = f"{name_prefix} {series_number}"
+            password = _get_password(pwd_len)
+
+            email = f"{firstname}.{lastname}{email_endin}"
+            displayname = f"{firstname} {lastname} {series_number}"
+            # firstname = f"{firstname}{series_number}"
+        else:
+            print('Mode not right.')
 
         whole_list.append([firstname,
                         lastname,
@@ -85,7 +108,7 @@ def write_csv(list, filename):
     except IOError as e:
         print(f"A problem occurs: {e}")
     else:
-        print(f"{len(list)} row has been written into {filename}.")
+        print(f"{len(list)} row has been written into {filename} in mode {mode}.")
 
 
 ### Private functions
@@ -97,8 +120,12 @@ def _get_password(pwd_len):
     my_pwd = pwd.Password(pwd_len) # create a Password object.
     return my_pwd.generate_password()
 
-def generate_series_number(last_num):
+def generate_random_series_number(last_num):
     return random.randint(0, last_num)
+
+def generate_next_series_number(last_num):
+    last_num += 1
+    return last_num
 
 def make_table(column_head, user_info) -> '2-dimensions list':
     whole_list = [] # 2-dimension
@@ -109,7 +136,7 @@ def make_table(column_head, user_info) -> '2-dimensions list':
 
 if __name__ == "__main__":
     column_head = create_column_head(column_list)
-    user_info = create_user_info(column_list, num_user)
+    user_info = create_user_info(column_list, num_user, mode)
     # Combian column-head + column-data => a big list
     whole_list = make_table(column_head, user_info)
     write_csv(whole_list, filename)
@@ -117,5 +144,3 @@ if __name__ == "__main__":
     # print(_get_random_item(firstname_list))
     # print(_get_firstname(firstname_list))
     # print(_get_password(18))
-# TODO:
-# RANDOM_MODE
