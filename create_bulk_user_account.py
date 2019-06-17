@@ -15,7 +15,7 @@
 # -----------------------------------------------------------------------------
 ### Variables that can be changed on demand
 filename = 'useraccount.csv'
-num_user = 1000
+num_user = 10000
 column_list = {
     # A dict representing AD field and column head pairs. 
     # Format: AD-field : Column-name (where Column-name exact match to variables in powershell)
@@ -36,6 +36,7 @@ firstname_list = ['John', 'Peter', 'Hello', 'Net', 'Aaron', 'David', 'Jade', 'Su
 lastname_list = ['Wick', 'Law', 'World', 'Lam', 'Law', 'Chan']
 # -----------------------------------------------------------------------------
 import csv, random
+from tqdm import tqdm
 import password as pwd
 
 ### In memory
@@ -53,7 +54,7 @@ def create_user_info(column_list, num_user, mode):
     whole_list = [] # 2-dimension
     series_number = 1
 
-    for i in range(num_user):
+    for i in tqdm(range(num_user)):
         if mode == 'random': # FIXME: random mode not work. Random mode
             # print("random mode")
             # create user name in random
