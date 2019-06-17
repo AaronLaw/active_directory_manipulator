@@ -77,7 +77,7 @@ def create_user_info(column_list, num_user, mode):
 
             # Generate user data according to columns, and append it to a big list
             firstname = name_prefix
-            lastname = f"{name_prefix} {series_number}"
+            lastname = f"{name_prefix}{series_number}"
             password = _get_password(pwd_len)
 
             email = f"{firstname}.{lastname}{email_endin}"
