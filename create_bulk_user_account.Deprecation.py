@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""WARNIG: This script has been deprecated since 2019-06-25 and continue in OOP style."""
 # Mass generate user information, and write into a csv file for later use.
 
 # Column name, number of user accounts, are user-defined.
@@ -145,20 +146,3 @@ if __name__ == "__main__":
     # print(_get_random_item(firstname_list))
     # print(_get_firstname(firstname_list))
     # print(_get_password(18))
-
-"""WARNIG: This script has been deprecated since 2019-06-25 and continue in OOP style."""
-
-class FileOperator():
-    """A class that handles file-related stuffs, such as file read / write."""
-    pass
-
-class CSVOperator(File):
-    pass
-
-class Data():
-    """A class that process data."""
-    pass
-
-class User():
-    """A class that handles users information."""
-    pass
